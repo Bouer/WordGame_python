@@ -26,13 +26,7 @@ VALORES_LETRAS = {
 ARCHIVO_PALABRAS = "palabras.txt"
 
 def cargar_palabras():
-    """
-    Retorna una lista de palabras válidas, compuestas por letras en minúscula.
-    
-    Dependiendo del tamaño de la lista de palabras, esta función puede tomarse su tiempo para finalizar.
-    """
-    
-
+   
     print("Cargando lista de palabras desde el archivo...")
     # inFile: Archivo
     #abriendo el archivo especificado por la variable ARCHIVO_PALABRAS 
@@ -52,14 +46,6 @@ def cargar_palabras():
     return palabras
 
 def obtener_diccionario_frecuencias(secuencia):
-    """
-    Genera un diccionario donde las claves son los elementos de la secuencia
-    y los valores son enteros, que indican la cantidad de veces que ese
-    elemento está repetido en la secuencia.
-
-    secuencia: cadena o lista
-    return: diccionario {tipo_elemento -> int}
-    """
     
     # frecuencias: diccionario
     frec = {}
@@ -77,8 +63,7 @@ def obtener_diccionario_frecuencias(secuencia):
 #
 def obtener_puntaje_palabra(palabra, n):
     
-      
-      
+     
       #Se calcula la longitud de la palabra contando la cantidad de letras válidas en ella
       #isalpha() método de cadena en Python que verifica si todos los caracteres de una cadena son letras.
       longitud_palabra = sum(1 for letra in palabra if letra.isalpha())  # Contar letras válidas en la palabra
@@ -86,7 +71,7 @@ def obtener_puntaje_palabra(palabra, n):
       #puntos_letras.get(letra.lower(), 0). Si la letra no está en el diccionario puntos_letras, se le asigna un valor de 0.
       #La función lower() se utiliza para considerar tanto letras mayúsculas como minúsculas.
       primer_componente = sum(VALORES_LETRAS.get(letra.lower(), 0) for letra in palabra.lower())
-      print("Primer Componente ",primer_componente)
+      
       
       if "*" in palabra:
           longitud_palabra += 1
@@ -94,52 +79,18 @@ def obtener_puntaje_palabra(palabra, n):
       #El segundo componente del puntaje se calcula utilizando la fórmula: 7 * longitud_palabra - 3 * (n - longitud_palabra), donde n es la cantidad total de letras disponibles en la mano.
       #Este componente asegura que las palabras más largas y las palabras que utilizan la mayoría de las letras de la mano tengan un mayor puntaje.
       segundo_componente = max(7 * longitud_palabra - 3 * (n - longitud_palabra), 1)
-      
-      print("n = ",n)  
-      print("longitud palabra: ", longitud_palabra)
-      print("Segundo componente: ",segundo_componente)
+     
       #se calcula el puntaje total multiplicando el primer componente por el segundo componente.
       puntaje = primer_componente * segundo_componente
       print()
-      print("Puntaje: ",puntaje)
+      
       #La función devuelve el puntaje calculado para la palabra.
       return puntaje
-      """
-    Obtiene el puntaje de una palabra. Asume que la palabra es una palabra válida.
-
-    Podemos asumir que la palabra siempre será una cadena de letras 
-    o la cadena vacía (""). No se puede asumir que solo contendrá letras en
-    minúsculas, así que deberemos resolver también con palabras con letras en
-    mayúscula y minúscula.
-    
-	El puntaje de una palabra es el producto de dos componentes:
-
-	Primer componente: la suma de los puntos de las letras en la palabra.
-    Segundo componente: 1 o la fórmula 
-        [7 * longitud_palabra - 3 * (n - longitud_palabra)], el valor que 
-    sea más grande, donde longitud_palabra es la cantidad de letras usadas 
-    en la palabra y n es la cantidad de letras disponibles en la mano actual.
-
-    Al igual que en Scrabble, cada letra tiene un puntaje.
-
-    palabra: cadena
-    n: int >= 0
-    retorna: int >= 0
-    """
+     
     
 
 def mostrar_mano(mano):
-    """
-    Muestra las letras que están en la mano del jugador.
-
-    Por ejemplo:
-       mostrar_mano({'a':1, 'x':2, 'l':3, 'e':1})
-    Debería mostrar por consola lo siguiente:
-       a x x l l l e
-    El orden de las letras no es importante.
-
-    mano: diccionario (string -> int)
-    """
+    
     #keys() método  que devuelve una vista de las claves (keys) presentes en el diccionario.
     for letra in mano.keys():
         for j in range(mano[letra]):
@@ -148,23 +99,10 @@ def mostrar_mano(mano):
 
 
 def repartir_mano(n):
-    """
-    Genera una mano al azar con n letras en minúscula.
-    techo(n/3) letras en la mano deben ser VOCALES.
-
-    Las manos se representan como diccionarios. Las claves son letras 
-    y los valores indican el número de veces que esa letra está contenida 
-    en la mano.
-
-    n: int >= 0
-    Retorna: diccionario (string -> int)
-    """
-    
+     
     mano={}
     #math.ceil() redondeado hacia arriba 
     cantidad_vocales = int(math.ceil(n / 3)) # 7/3 = 2,33 [3]
-    
-    print(cantidad_vocales)
     
     for i in range(cantidad_vocales-1):
         #random.choice() - vocal aleatoria de la lista VOCALES
@@ -176,17 +114,13 @@ def repartir_mano(n):
 #Esto garantiza que se mantenga un registro de cuántas veces se ha agregado
 #cada vocal al diccionario mano.
         mano[x] = mano.get(x, 0) + 1
-        print(mano)
         
     mano["*"] = 1 # Agregamos el comodin
     
     for i in range(cantidad_vocales, n):    
         x = random.choice(CONSONANTES)
         mano[x] = mano.get(x, 0) + 1
-        print(mano)
-        
-        
-    
+       
     return mano
 
 #
@@ -202,25 +136,7 @@ def actualizar_mano(mano, palabra):
             nueva_mano[letra] = max(0, nueva_mano[letra] - 1)
             print(nueva_mano[letra])
     return nueva_mano
-   
- 
- 
-    """
-    NO asumir que la mano contiene el mismo número de veces una letra 
-    que las que aparece en la palabra. Las letras que están en la palabra 
-    y no en la mano deben ser ignoradas. Las letras que aparecen más veces 
-    en la palabra que en la mano no deben resultar en un total negativo; 
-    debemos eliminar esa letra de la mano o poner su cantidad en 0.
 
-    Actualiza la mano: usa las letras que están en la palabra y retorna 
-    la nueva mano, sin esas letras.
-
-    No debe modificar mano, sino que debe retornar un nuevo diccionario.
-
-    palabra: string
-    mano: diccionario (string -> int)    
-    retorna: diccionario (string -> int)
-    """
 
 #
 # Problema #4: Verificar si la palabra es válida.
@@ -232,25 +148,23 @@ def es_palabra_valida(palabra, mano, lista_palabras):
 #el valor de la variable en cada iteración.
     lista_mano = [letra  for letra, cantidad in mano.items() for _ in range(cantidad)]
     lista_mano_copy = lista_mano.copy()  # Crear una copia de la lista mano
-    print(lista_mano_copy)  
-    
+        
     palabra_min = palabra.lower()
     palabra_sin_asterisco = ""
-    print("Pasando letras a minuscula : ", palabra_min)
+    
     
     if "*" in palabra_min:
-        print("La palabra tiene un * , reemplazamos por vocales")
         palabras_reemplazadas = [palabra_min.replace("*", vocal) for vocal in "aeiou"]
-        print(palabras_reemplazadas)
+        
         
         for palabra_asterisco in palabras_reemplazadas:
             if palabra_asterisco in lista_palabras:
-                print("Se encontró un elemento en común:", palabra_asterisco)
+                
                 palabra_sin_asterisco = palabra_asterisco
-                print("palabra sin asterisco: ", palabra_sin_asterisco)
+                
                 break
     else:
-        print("La palabra NO tiene un * ")
+        
         palabra_sin_asterisco = palabra_min  
       
     
@@ -262,22 +176,21 @@ def es_palabra_valida(palabra, mano, lista_palabras):
           
     if palabra_sin_asterisco in lista_palabras:
         
-        print("La palabra '{}' SE encuentra en la lista.".format(palabra_min))
-        print(lista_mano_copy)       
+        
         for letra in palabra_min:
             if letra in lista_mano_copy:
-                print(letra)
+                
                 lista_mano_copy.remove(letra)  # Eliminar la letra de la lista mano
-                print(lista_mano_copy)
+                
             else:
                 puede_formar_palabra = False
                 
                 break
         if puede_formar_palabra:
-            print("La palabra se puede formar")
+            
             return True
         else:
-            print("La palabra NO se puede formar")
+            
             return False
     else:
         return False
@@ -294,22 +207,50 @@ def es_palabra_valida(palabra, mano, lista_palabras):
     lista_palabras: lista de cadenas en minúsculas
     Retorna: boolean
     """
-    #pass # TO DO... Eliminar esta linea cuando se implemente la función.
+    
 
 #
 # Problema #5: Jugar una mano
 #
 def calcular_longitud_mano(mano):
-    """ 
-    Retorna la longitud (cantida de letras) en la mano actual.
     
-    mano: diccionario (string-> int)
-    retorna: integer
-    """
+    return sum(mano.values())
     
-    pass # TO DO... Eliminar esta linea cuando se implemente la función.
-
+    
 def jugar_mano(mano, lista_palabras):
+    
+    palabra = ""
+    letras_en_mano = sum(mano.values())  
+    n = TAMANIO_MANO
+    puntaje_total = 0
+    
+    while letras_en_mano != 0 or palabra == "!!!":
+        
+        print(" ")
+        print("Mano actual:", end=" ")
+        mostrar_mano(mano)
+        print(" ")
+  
+        palabra = input("Ingrese una palabra o ""!!"" para indicar que desea terminar: ")
+        
+        if (palabra == "!!!"):
+            break
+        print ("{}".format(palabra), end=" ")
+        
+        if (es_palabra_valida(palabra, mano, lista_palabras)):
+            puntaje = obtener_puntaje_palabra(palabra, n)
+            puntaje_total += puntaje
+            print("Resulta en {} puntos".format(puntaje))
+            print("Total: {} puntos".format(puntaje_total))
+        else:
+            print(" ")
+            print("La palabra no es valida")
+            
+        actualizar_mano(mano, palabra)
+            
+        
+  
+  
 
     """
     Permite que un usuario juegue una mano, con las siguientes consideraciones:
@@ -410,24 +351,10 @@ def intercambiar_mano(mano, letra):
     
 def jugar_partida(lista_palabras):
    
-   TAMANIO_MANO = 6
-   #mano = {'n': 1, 'h': 1, 'o': 1, 'l': 1, 'd':1, 'w':1, 'a': 2}
-   #palabra = "hola" 
-   mano = {'n': 1, 'a': 1, '*': 1, 'f': 1, 'l':1, 'w':1}
-   palabra = "fl*n"
-   
-   #total_manos = int(input("Ingrese cantidad de manos a jugar: "))
-   lista_palabras = cargar_palabras()
-   
-      
-   repartir_mano(TAMANIO_MANO)
+   print(" ")   
    print("Jugando Mano")
-     
-   es_palabra_valida(palabra, mano, lista_palabras)
-   
-   puntaje = obtener_puntaje_palabra(palabra, TAMANIO_MANO)
-   print("PUNTAJE: ",puntaje)
-    
+   mano = repartir_mano(TAMANIO_MANO)
+   jugar_mano(mano, lista_palabras)
      
     
      # if palabra.lower() in lista_palabras:
