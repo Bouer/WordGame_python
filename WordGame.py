@@ -7,7 +7,8 @@ Created on Mon Jun 29 23:32:49 2020
 
 import math
 import random
-import re
+import os
+
 
 
 VOCALES = 'aeiou'
@@ -27,7 +28,7 @@ ARCHIVO_PALABRAS = "palabras.txt"
 
 def cargar_palabras():
    
-    print("Cargando lista de palabras desde el archivo...")
+    #print("Cargando lista de palabras desde el archivo...")
     # inFile: Archivo
     #abriendo el archivo especificado por la variable ARCHIVO_PALABRAS 
     inFile = open(ARCHIVO_PALABRAS, 'r')
@@ -41,7 +42,7 @@ def cargar_palabras():
         palabras.append(palabra.strip().lower())
 #se imprime la cantidad de palabras cargadas en la lista 
 #y se retorna la lista completa de palabras.
-    print("  ", len(palabras), "palabras cargadas.")
+    #print("  ", len(palabras), "palabras cargadas.")
     
     return palabras
 
@@ -134,7 +135,7 @@ def actualizar_mano(mano, palabra):
     for letra in palabra:
         if letra in nueva_mano:
             nueva_mano[letra] = max(0, nueva_mano[letra] - 1)
-            print(nueva_mano[letra])
+            #print(nueva_mano[letra])
     return nueva_mano
 
 
@@ -220,34 +221,67 @@ def calcular_longitud_mano(mano):
 def jugar_mano(mano, lista_palabras):
     
     palabra = ""
-    letras_en_mano = sum(mano.values())  
+    letras_en_mano = calcular_longitud_mano(mano)
     n = TAMANIO_MANO
     puntaje_total = 0
     
-    while letras_en_mano != 0 or palabra == "!!!":
+    while letras_en_mano > 0 or palabra != "!!":
         
         print(" ")
         print("Mano actual:", end=" ")
-        mostrar_mano(mano)
+        nueva_mano = actualizar_mano(mano, palabra)
+        mostrar_mano(nueva_mano)
+        
+        
         print(" ")
-  
+        palabra_anterior = palabra
+        
         palabra = input("Ingrese una palabra o ""!!"" para indicar que desea terminar: ")
         
-        if (palabra == "!!!"):
-            break
-        print ("{}".format(palabra), end=" ")
-        
         if (es_palabra_valida(palabra, mano, lista_palabras)):
+            
             puntaje = obtener_puntaje_palabra(palabra, n)
             puntaje_total += puntaje
-            print("Resulta en {} puntos".format(puntaje))
+            print("+","+",sep="------------------------")
+            print('"{}"'.format(palabra)," + resulta en {} puntos".format(puntaje),end="\n\n")
+            
             print("Total: {} puntos".format(puntaje_total))
+            print("+","+",sep="------------------------", end="\n\n")
+            
+            mano = nueva_mano
+            
+        elif (palabra == "!!"):
+            
+            break
+        
         else:
             print(" ")
+            print("+","+",sep="------------------------")
             print("La palabra no es valida")
+            print("+","+",sep="------------------------", end="\n")
             
-        actualizar_mano(mano, palabra)
+            palabra = palabra_anterior  # Restaurar la palabra anterior
             
+    
+        
+    letras_en_mano = calcular_longitud_mano(mano)
+         
+    
+    if letras_en_mano == 0:
+        
+        print("+","+",sep="------------------------")
+        print("Se quedo sin letras")
+        print(" Puntaje Final: {} puntos".format(puntaje_total))
+        print("+","+",sep="------------------------", end="\n\n")
+    elif palabra == "!!" :
+        print(" ")
+        print("+","+",sep="------------------------")
+        print(" Puntaje Final: {} puntos".format(puntaje_total))
+        print("+","+",sep="------------------------", end="\n\n")
+        print("")
+        
+        
+     
         
   
   
@@ -280,6 +314,7 @@ def jugar_mano(mano, lista_palabras):
       
     """
     
+    """
     # PSEUDO-CODIGO
     # Llevar registro del puntaje total
     
@@ -309,7 +344,7 @@ def jugar_mano(mano, lista_palabras):
     # se le muestra el puntaje final de la mano.
 
     # Retorna el puntaje final como resultado de la función.
-
+    """
 
 
 #
@@ -322,6 +357,26 @@ def jugar_mano(mano, lista_palabras):
 #
 
 def intercambiar_mano(mano, letra):
+    
+    mano_copia = mano.copy()
+    print(mano_copia)
+    letras = VOCALES + CONSONANTES
+    
+    if letra in mano_copia:
+        cantidad_letra = mano_copia.pop(letra)
+        print("Cantidad de la letra a eliminar:", cantidad_letra)
+        
+        nueva_letra = random.choice(letras)
+        while nueva_letra in mano_copia:  # Si existe nueva_letra , crea otra
+            nueva_letra = random.choice(letras)
+            
+        mano_copia[nueva_letra] = cantidad_letra
+    
+    print(" ")
+    mostrar_mano(mano_copia)
+    print(mano_copia)
+    return mano_copia
+    
     """
     Permite al usuario reemplazar todas las copias de una letra en la mano 
     (elegida por el usuario) por una nueva letra elegida, al azar, de VOCALES 
@@ -343,20 +398,101 @@ def intercambiar_mano(mano, letra):
     retorna: diccionario (string -> int)
     """
     
-    pass  # TO DO... Eliminar esta linea cuando se implemente la función.
-
+    
 #
 # Problema #1: Armar esqueleto del ciclo de juego
 #       
+def Bienvenida ():
+
+    print(" ")
+    print("+++++++++++++++++++++++++++++++++++++++")
+    print("","   BIENVENIDO AL JUEGO DE PALABRAS   ","",sep="|")
+    print(""," REALIZADO PARA EL TALLER DE PYTHON  ","",sep="|")
+    print("","EN EL MARCO DE ARGENTINA PROGRAMA 4.0","",sep="|")
+    print("","          By Matias Cabrera          ","",sep="|")
+    print("","                                     ","",sep="|")
+    print("","  Visita mi repositorio en GitHub:   ","",sep="|")
+    print("","    https://github.com/Bouer         ","",sep="|")
+    print("+++++++++++++++++++++++++++++++++++++++")
+    print(" ")
+    input("Presione Enter para continuar...")
     
+    for i in range(15):
+        print(" ")
+    
+    pass
+
 def jugar_partida(lista_palabras):
    
-   print(" ")   
-   print("Jugando Mano")
-   mano = repartir_mano(TAMANIO_MANO)
-   jugar_mano(mano, lista_palabras)
-     
+   Bienvenida ()
+   print("+++++++++++++++++++++++++++++++++++++++")
+   print(" ")
+   cantidad_manos = None
+
+   while cantidad_manos is None:
+        input_cantidad_manos = input("Ingrese la cantidad de manos a jugar: ")
+        
+        try:
+            cantidad_manos = int(input_cantidad_manos)
+            
+            if cantidad_manos <= 0:
+                print("La cantidad de manos debe ser un número positivo.")
+                cantidad_manos = None
+        except ValueError:
+            print("Ingrese un número válido para la cantidad de manos.")
+
     
+   mano = repartir_mano(TAMANIO_MANO)
+    
+
+   for i in range(cantidad_manos):
+       print(" ")
+       print("Jugando mano número", i+1) 
+       print(" ")
+       
+       mano_anterior = mano
+              
+       if (i >= 1):
+           repetir_mano = input("¿Desea repetir la mano actual?? ")
+           print(" ")
+           if (repetir_mano.lower() == "si" ):
+               print("+","+",sep="----------------------------")
+               print(" Mano actual: ",end=" " )
+               mostrar_mano(mano_anterior)
+               print("+","+",sep="----------------------------")
+               print(" ")
+           else:
+               mano = repartir_mano(TAMANIO_MANO)
+               print("+","+",sep="----------------------------")
+               print(" Mano actual: ",end=" " )
+               mostrar_mano(mano)
+               print("+","+",sep="----------------------------")
+               print(" ")
+           
+       
+        
+       intercambio_deseado = " "
+       
+       while intercambio_deseado.lower() != "si" and intercambio_deseado.lower() != "no":
+           
+           intercambio_deseado = input("---- ¿Desea intercambiar una letra? (si/no): ")
+        
+           if intercambio_deseado.lower() == "si":
+               letra_para_reemplazar = input("---- ¿Qué letra desea intercambiar?: ")
+               mano_intercam = intercambiar_mano(mano, letra_para_reemplazar)
+           elif intercambio_deseado.lower() == "no":
+               print("No se realizará ningún intercambio.")
+               mano_intercam = mano
+           else:
+               print("Opción no válida. Por favor, ingrese 'si' o 'no'.")
+
+       jugar_mano(mano_intercam, lista_palabras)
+   
+   
+   
+   
+   
+   
      # if palabra.lower() in lista_palabras:
      #    print('La palabra {} se encuentra en la lista.')
      # else:
@@ -443,5 +579,9 @@ if __name__ == '__main__':
     lista_palabras = cargar_palabras()
     jugar_partida(lista_palabras)
     
+    
+    print("+++++++++++++++++++++")
+    print("","   FIN DEL JUEGO   ","",sep="|")
+    print("+++++++++++++++++++++")
   
    
