@@ -7,7 +7,7 @@ Created on Mon Jun 29 23:32:49 2020
 
 import math
 import random
-import os
+
 
 
 
@@ -420,7 +420,7 @@ def Bienvenida ():
     for i in range(15):
         print(" ")
     
-    pass
+
 
 def jugar_partida(lista_palabras):
    
@@ -428,22 +428,21 @@ def jugar_partida(lista_palabras):
    print("+++++++++++++++++++++++++++++++++++++++")
    print(" ")
    cantidad_manos = None
+   mano = repartir_mano(TAMANIO_MANO)
 
    while cantidad_manos is None:
-        input_cantidad_manos = input("Ingrese la cantidad de manos a jugar: ")
+       
+       input_cantidad_manos = input("Ingrese la cantidad de manos a jugar: ")
         
-        try:
+       try:
             cantidad_manos = int(input_cantidad_manos)
             
             if cantidad_manos <= 0:
                 print("La cantidad de manos debe ser un número positivo.")
                 cantidad_manos = None
-        except ValueError:
+       except ValueError:
             print("Ingrese un número válido para la cantidad de manos.")
-
-    
-   mano = repartir_mano(TAMANIO_MANO)
-    
+ 
 
    for i in range(cantidad_manos):
        print(" ")
@@ -468,7 +467,13 @@ def jugar_partida(lista_palabras):
                mostrar_mano(mano)
                print("+","+",sep="----------------------------")
                print(" ")
-           
+       else:
+              mano = repartir_mano(TAMANIO_MANO)
+              print("+","+",sep="----------------------------")
+              print(" Mano actual: ",end=" " )
+              mostrar_mano(mano)
+              print("+","+",sep="----------------------------")
+              print(" ")
        
         
        intercambio_deseado = " "
