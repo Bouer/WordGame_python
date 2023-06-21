@@ -9,8 +9,6 @@ import math
 import random
 
 
-
-
 VOCALES = 'aeiou'
 CONSONANTES = 'bcdfghjklmnpqrstvwxyz'
 TAMANIO_MANO = 7
@@ -52,16 +50,9 @@ def obtener_diccionario_frecuencias(secuencia):
     frec = {}
     for x in secuencia:
         frec[x] = frec.get(x,0) + 1
-        
+    
     return frec
-	
-#
-# (fin Codigo de ayuda)
-# -----------------------------------
 
-#
-# Problema #2: Puntuar una palabra
-#
 def obtener_puntaje_palabra(palabra, n):
     
      
@@ -87,7 +78,6 @@ def obtener_puntaje_palabra(palabra, n):
       
       #La función devuelve el puntaje calculado para la palabra.
       return puntaje
-     
     
 
 def mostrar_mano(mano):
@@ -105,28 +95,21 @@ def repartir_mano(n):
     #math.ceil() redondeado hacia arriba 
     cantidad_vocales = int(math.ceil(n / 3)) # 7/3 = 2,33 [3]
     
-    for i in range(cantidad_vocales-1):
-        #random.choice() - vocal aleatoria de la lista VOCALES
-        x = random.choice(VOCALES)
-#Se utiliza el método get() del diccionario para obtener el valor actual de la clave x.
-#Si la clave x no existe en el diccionario, se devuelve 0 como valor predeterminado.
-#Se agrega 1 al valor obtenido (o 0 si la clave no existía) 
-#y se actualiza el diccionario mano con el nuevo valor.
-#Esto garantiza que se mantenga un registro de cuántas veces se ha agregado
-#cada vocal al diccionario mano.
-        mano[x] = mano.get(x, 0) + 1
-        
+    
+    vocales = obtener_diccionario_frecuencias(random.choices(VOCALES, k=cantidad_vocales))
+    mano.update(vocales)
+    print(mano)
+    
+           
     mano["*"] = 1 # Agregamos el comodin
     
-    for i in range(cantidad_vocales, n):    
-        x = random.choice(CONSONANTES)
-        mano[x] = mano.get(x, 0) + 1
-       
+    consonantes = obtener_diccionario_frecuencias(random.choices(CONSONANTES,k=n-1-cantidad_vocales))
+    mano.update(consonantes)
+    print(mano)
+ 
     return mano
 
-#
-# Problema #3: Actualizar la mano eliminando letras.
-#
+
 def actualizar_mano(mano, palabra):
    
     nueva_mano = mano.copy()  # Crear una copia de la mano original
@@ -138,10 +121,6 @@ def actualizar_mano(mano, palabra):
             #print(nueva_mano[letra])
     return nueva_mano
 
-
-#
-# Problema #4: Verificar si la palabra es válida.
-#
 def es_palabra_valida(palabra, mano, lista_palabras):
 #En Python, cuando no se necesita utilizar el valor de una variable en un bucle,
 #es común usar el guion bajo (_) como nombre de variable. 
@@ -196,23 +175,7 @@ def es_palabra_valida(palabra, mano, lista_palabras):
     else:
         return False
               
-    
-    
-    """
-    Devuelve True si la palabra está en lista_palabras y está compuesta
-    completamente por letras en la mano. Sino, devuelve False.
-    No se debe modificar ni mano ni lista_palabras.
-   
-    palabra: string
-    mano: diccionario (string -> int)
-    lista_palabras: lista de cadenas en minúsculas
-    Retorna: boolean
-    """
-    
 
-#
-# Problema #5: Jugar una mano
-#
 def calcular_longitud_mano(mano):
     
     return sum(mano.values())
@@ -280,81 +243,7 @@ def jugar_mano(mano, lista_palabras):
         print("+","+",sep="------------------------", end="\n\n")
         print("")
         
-        
-     
-        
-  
-  
 
-    """
-    Permite que un usuario juegue una mano, con las siguientes consideraciones:
-
-    * Se le muestra la mano actual.
-    
-    * El usuario puede ingresar una palabra.
-
-    * Cuando una palabra es ingresada (válida o inválida), utiliza letras de la mano.
-
-    * Una palabra inválida se rechaza, mediante un mensaje que le pide al usuario
-      que ingrese otra palabra.
-
-    * Después de cada palabra válida: se muestra el puntaje de la palabra, 
-      las letras restantes de la mano y se le pide al usuario que ingrese 
-      otra palabra.
-
-    * La suma de los puntajes de las palabras se presenta una vez que la mano termina.
-
-    * La mano termina cuando no hay más letras sin usar.
-      El usuario también puede terminar la mano ingresando dos signos de exclamación
-      ('!!') en vez de una palabra.
-
-      mano: diccionario (string -> int)
-      lista_palabras: lista de cadenas en minúsculas.
-      retorna: el puntaje total de la mano
-      
-    """
-    
-    """
-    # PSEUDO-CODIGO
-    # Llevar registro del puntaje total
-    
-    # Mientras haya letras en la mano o el usuario no ingrese '!!':
-    
-        # Mostrar la mano
-        
-        # Pedirle al usuario que ingrese una palabra
-        
-        # Si la entrada son dos signos de exclamación, se termina el juego
-                    
-        # Sino (la entrada no son dos signos de exclamación):
-
-            # Si la palabra es válida:
-
-                # Mostrarle al usuario los puntos que ganó,
-                # y el puntaje total de la mano hasta ese momento.
-
-            # Sino (la palabra no es válida):
-                # Rechazar palabra inválida (mostrar un mensaje)
-                
-            # actualizar la mano del usuario eliminando las letras 
-            # que usó en la palabra (aún si la palabra era inválida)
-            
-
-    # Se terminó el juego (el usuario se quedó sin letras o ingresó '!!'),
-    # se le muestra el puntaje final de la mano.
-
-    # Retorna el puntaje final como resultado de la función.
-    """
-
-
-#
-# Problema #6: Jugar una partida completa
-# 
-
-
-#
-# procedimiento para reemplazar una letra en la mano
-#
 
 def intercambiar_mano(mano, letra):
     
@@ -364,7 +253,7 @@ def intercambiar_mano(mano, letra):
     
     if letra in mano_copia:
         cantidad_letra = mano_copia.pop(letra)
-        print("Cantidad de la letra a eliminar:", cantidad_letra)
+        #print("Cantidad de la letra a eliminar:", cantidad_letra)
         
         nueva_letra = random.choice(letras)
         while nueva_letra in mano_copia:  # Si existe nueva_letra , crea otra
@@ -372,36 +261,12 @@ def intercambiar_mano(mano, letra):
             
         mano_copia[nueva_letra] = cantidad_letra
     
-    print(" ")
+   # print(" ")
     mostrar_mano(mano_copia)
-    print(mano_copia)
+    #print(mano_copia)
     return mano_copia
+
     
-    """
-    Permite al usuario reemplazar todas las copias de una letra en la mano 
-    (elegida por el usuario) por una nueva letra elegida, al azar, de VOCALES 
-    y CONSONANTES. La nueva letra debe ser diferente a la elegida para intercambiar, 
-    y no puede ser ninguna de las letras que ya tiene en la mano.
-    
-    Si el usuario ingresa una letra que no está en la mano, la mano debe quedar igual.
-    
-    No se debe modificar la mano original.
-    Por ejemplo:
-        intercambiar_mano({'h':1, 'e':1, 'l':2, 'o':1}, 'l')
-    puede resultar en:
-        {'h':1, 'e':1, 'o':1, 'x':2} -> si la nueva letra es 'x'
-    La nueva letra no debe ser 'h', 'e', 'l', u 'o' ya que esas letras ya están en 
-    la mano.
-    
-    mano: diccionario (string -> int)
-    letra: string
-    retorna: diccionario (string -> int)
-    """
-    
-    
-#
-# Problema #1: Armar esqueleto del ciclo de juego
-#       
 def Bienvenida ():
 
     print(" ")
@@ -420,8 +285,6 @@ def Bienvenida ():
     for i in range(15):
         print(" ")
     
-
-
 def jugar_partida(lista_palabras):
    
    Bienvenida ()
@@ -494,97 +357,10 @@ def jugar_partida(lista_palabras):
        jugar_mano(mano_intercam, lista_palabras)
    
    
-   
-   
-   
-   
-     # if palabra.lower() in lista_palabras:
-     #    print('La palabra {} se encuentra en la lista.')
-     # else:
-     #    print('La palabra {} NO se encuentra en la lista.')
-        
-    # while (total_manos>0):
-    #         print("Jugando Mano")
-            
-    #         mano = repartir_mano(TAMANIO_MANO)
-    #         mostrar_mano(mano)
-            
-    #         if (intercambiar_letra != 0):
-                
-    #             intercambio = bool(input ("Desea intercambiar mano?? si/no"))
-    #             if intercambio == ("si"):
-    #                 print("True")
-                        
-    #                 letra = input("Ingresar letra a intercambiar: ")
-                    
-    #                 cambio_letra = intercambiar_mano(mano, letra)
-    #                 print (mostrar_mano(cambio_letra))
-                    
-    #                 intercambiar_letra -= 1               
-                
-    #             if intercambio == ("no"):
-                
-    #                 print("False")
-                    
-    #                 intercambiar_letra = 0
-                
-    #         else:
-                
-    #             print("Jugando mano actual")
-                
-    #             intercambiar_letra = 0
-                
-    #             if (repitio_mano):
-    #               #  obtener_puntaje_palabra(palabra, )
-    #             else:
-    #                 bool(input("Desea repetir la mano actual??: "))
-                    
-                    
-    #         total_manos -= 1
-            
-        
-    
-   """
-    Permitir al usuario jugar una serie de manos (partida)
-
-    * Pedir al usuario que ingrese un número total de manos.
-
-    * Acumular el puntaje de cada mano en un puntaje total para la partida.
- 
-    * Por cada mano, antes de empezar a jugar, preguntar al usuario si quiere
-      intercambiar una letra por otra. Esto se puede hacer sólo una vez durante 
-      el juego. Una vez que se usa esta opción, no se le debe preguntar nuevamente 
-      al usuario si quiere intercambiar una letra durante el juego.
-    
-    * Por cada mano, preguntar al usuario si desea volver a jugar la mano.
-      Si el usuario ingresa 'si', se repetirá la mano y se mantendrá el mayor
-      de los dos puntajes obtenidos para esa mano. Esto se puede hacer una única vez
-      durante la partida. Una vez que se utiliza la opción de volver a jugar una mano,
-      no se debe volver a preguntar si desea volver a jugar futuras manos. Volver a
-      jugar una mano no afecta el número de manos totales que el usuario eligió jugar.
-      
-            * Nota: si se vuelve a jugar una mano, no se podrá elegir reemplazar una
-              letra (se debe jugar con la mano original)
-      
-    * Devuelve el puntaje total de la partida.
-
-    lista_palabras: lista de cadenas en minúsculas
-    """
-    
-    #print("jugar_partida no implementado.") # TO DO... Eliminar esta linea cuando se implemente la función.
-    
-
-
-#
-# Construye las estructuras de datos necesarias para jugar la partida.
-# No eliminar la condición "if __name__ == '__main__':" Este código se ejecuta
-# cuando el programa se ejecuta directamente, sin usar la sentencia import.
-#
 if __name__ == '__main__':
     lista_palabras = cargar_palabras()
     jugar_partida(lista_palabras)
-    
-    
+   
     print("+++++++++++++++++++++")
     print("","   FIN DEL JUEGO   ","",sep="|")
     print("+++++++++++++++++++++")
